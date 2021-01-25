@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Spinner, Form, Button } from 'react-bootstrap'
 import Message from '../components/Message'
+import { listProducts } from '../actions/productListAction'
 
 const initialLoading = {
    loading: false,
@@ -9,6 +11,14 @@ const initialLoading = {
 
 const HomeScreen = () => {
    const [loading, setLoading] = useState(initialLoading)
+   const dispatch = useDispatch()
+
+   const productList = useSelector((state) => state.productList)
+   const { load, error, products } = productList
+
+   useEffect(() => {
+      dispatch(listProducts())
+   }, [dispatch])
 
    return (
       <>
