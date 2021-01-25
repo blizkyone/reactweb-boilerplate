@@ -19,10 +19,8 @@ const Header = () => {
                <Navbar.Toggle aria-controls='basic-navbar-nav' />
                <Navbar.Collapse id='basic-navbar-nav'>
                   <Nav className='ml-auto'>
-                     <LinkContainer to='/cart'>
-                        <Nav.Link>
-                           <i className='fas fa-shopping-cart'></i> Cart
-                        </Nav.Link>
+                     <LinkContainer to='/map'>
+                        <Nav.Link>Map</Nav.Link>
                      </LinkContainer>
                      {userInfo?.name ? (
                         <NavDropdown title='Username' id='username'>
