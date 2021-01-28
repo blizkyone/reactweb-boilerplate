@@ -8,6 +8,13 @@ export const authenticateUser = gql`
             name
             id
          }
+         message
       }
+   }
+`
+
+export const verifyUsername = gql`
+   mutation($username: String!) {
+      verifyUsername(username: $username)
    }
 `
