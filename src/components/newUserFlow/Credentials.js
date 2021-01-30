@@ -22,7 +22,7 @@ const Credentials = ({
    const [passwordError, setPasswordError] = useState()
 
    const [usernameGood, setUsernameGood] = useState()
-   const [confirmPassword, setConfirmPassword] = useState()
+   const [confirmPassword, setConfirmPassword] = useState('')
 
    const usernameChange = (e) => {
       setUsername(e.target.value)
@@ -101,7 +101,11 @@ const Credentials = ({
                />
                <InputGroup.Append>
                   <Button disabled={usernameGood} onClick={checkUsername}>
-                     Verify
+                     {usernameGood ? (
+                        <i className='bi bi-check2'></i>
+                     ) : (
+                        'Verify'
+                     )}
                   </Button>
                </InputGroup.Append>
             </InputGroup>

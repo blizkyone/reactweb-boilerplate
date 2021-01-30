@@ -22,6 +22,7 @@ const facebookProvider = new firebase.auth.FacebookAuthProvider()
 // const twitterProvider = new firebase.auth.TwitterAuthProvider()
 
 export {
+   firebase,
    auth,
    googleProvider,
    facebookProvider,

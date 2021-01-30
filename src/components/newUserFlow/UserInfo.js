@@ -8,9 +8,10 @@ const UserInfo = ({
    setName,
    gender,
    setGender,
-   birthDay,
-   setBirthDay,
+   birthDate,
+   setBirthDate,
    setStage,
+   handleCreateUser,
 }) => {
    const [maleSelected, setMaleSelected] = useState(false)
    const [femaleSelected, setFemaleSelected] = useState(false)
@@ -38,9 +39,35 @@ const UserInfo = ({
       setGender('female')
    }
 
+   const dayChange = (e) => {
+      setDay(e.target.value)
+      setBirthDate(
+         moment(`${year}-${month}-${e.target.value}`, 'YYYY-M-DD')
+            .valueOf()
+            .toString()
+      )
+   }
+
+   const monthChange = (e) => {
+      setMonth(e.target.value)
+      setBirthDate(
+         moment(`${year}-${e.target.value}-${day}`, 'YYYY-M-DD')
+            .valueOf()
+            .toString()
+      )
+   }
+
+   const yearChange = (e) => {
+      setYear(e.target.value)
+      setBirthDate(
+         moment(`${e.target.value}-${month}-${day}`, 'YYYY-M-DD')
+            .valueOf()
+            .toString()
+      )
+   }
+
    const createUser = (e) => {
       e.preventDefault()
-
       if (
          name &&
          gender &&
@@ -51,6 +78,7 @@ const UserInfo = ({
          !(moment().year() - year > 120)
       ) {
          console.log('Ready to save user')
+         handleCreateUser()
          return
       }
 
@@ -70,7 +98,6 @@ const UserInfo = ({
          )
       } else {
          setBirthDateError(null)
-         setBirthDay(moment(`${year}-${month}-${day}`, 'YYYY-M-DD').valueOf())
       }
       if (!gender) {
          setGenderError('Must select a gender')
@@ -130,7 +157,7 @@ const UserInfo = ({
                   type='number'
                   placeholder='DD'
                   value={day}
-                  onChange={(e) => setDay(e.target.value)}
+                  onChange={dayChange}
                />
             </Form.Group>
             <Form.Group as={Col}>
@@ -138,7 +165,7 @@ const UserInfo = ({
                   type='number'
                   placeholder='MM'
                   value={month}
-                  onChange={(e) => setMonth(e.target.value)}
+                  onChange={monthChange}
                />
             </Form.Group>
             <Form.Group as={Col}>
@@ -146,7 +173,7 @@ const UserInfo = ({
                   type='number'
                   placeholder='YYYY'
                   value={year}
-                  onChange={(e) => setYear(e.target.value)}
+                  onChange={yearChange}
                />
             </Form.Group>
          </Form.Row>

@@ -2,16 +2,21 @@ import React, { useState, useEffect } from 'react'
 import { Card } from 'react-bootstrap'
 import Credentials from './Credentials'
 import UserInfo from './UserInfo'
-import { auth } from '../../firebase'
+import { auth, firebase } from '../../firebase'
+import { useMutation } from '@apollo/client'
+import { createUser } from '../../gql/mutations'
+
+import moment from 'moment'
 
 const NewUserFlow = () => {
-   const [stage, setStage] = useState(1)
+   const [createNewUser] = useMutation(createUser)
+   const [stage, setStage] = useState(0)
    const [username, setUsername] = useState('')
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
    const [name, setName] = useState('')
    const [gender, setGender] = useState('')
-   const [birthDay, setBirthDay] = useState()
+   const [birthDate, setBirthDate] = useState()
 
    useEffect(() => {
       const init = async () => {
@@ -25,6 +30,33 @@ const NewUserFlow = () => {
 
       init()
    }, [])
+
+   const handleCreateUser = async () => {
+      console.log(moment(parseInt(birthDate)).format('MMMM Do, YYYY'))
+      let uid = await auth.currentUser.uid
+      console.log({ uid, username, email, password, name, gender, birthDate })
+      const { data } = await createNewUser({
+         variables: {
+            data: { uid, username, email, password, name, gender, birthDate },
+         },
+      })
+      console.log(data)
+
+      // add firebase email/password sign in
+      const credential = firebase.auth.EmailAuthProvider.credential(
+         email,
+         password
+      )
+      auth.currentUser
+         .linkWithCredential(credential)
+         .then(function (usercred) {
+            var user = usercred.user
+            console.log('Account linking success', user)
+         })
+         .catch(function (error) {
+            console.log('Account linking error', error)
+         })
+   }
 
    const credentialsProps = {
       username,
@@ -41,9 +73,10 @@ const NewUserFlow = () => {
       setName,
       gender,
       setGender,
-      birthDay,
-      setBirthDay,
+      birthDate,
+      setBirthDate,
       setStage,
+      handleCreateUser,
    }
 
    const stepper = (stage) => {

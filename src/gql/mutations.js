@@ -18,3 +18,16 @@ export const verifyUsername = gql`
       verifyUsername(username: $username)
    }
 `
+
+export const createUser = gql`
+   mutation($data: CreateUserInput!) {
+      createUser(data: $data) {
+         token
+         user {
+            name
+            id
+         }
+         message
+      }
+   }
+`

@@ -1,14 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
-
-const initialUserInfo = {
-   name: 'Paolo Lago',
-   isAdmin: true,
-}
+import { SessionContext } from '../context/SessionContext'
 
 const Header = () => {
-   const [userInfo, setUserInfo] = useState(initialUserInfo)
+   const { userProfile } = useContext(SessionContext)
+
    return (
       <header>
          <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
@@ -22,7 +19,7 @@ const Header = () => {
                      <LinkContainer to='/map'>
                         <Nav.Link>Map</Nav.Link>
                      </LinkContainer>
-                     {userInfo?.name ? (
+                     {userProfile ? (
                         <NavDropdown title='Username' id='username'>
                            <LinkContainer to='/profile'>
                               <NavDropdown.Item>Profile</NavDropdown.Item>
@@ -41,7 +38,7 @@ const Header = () => {
                            </Nav.Link>
                         </LinkContainer>
                      )}
-                     {userInfo && userInfo.isAdmin && (
+                     {userProfile && userProfile.isAdmin && (
                         <NavDropdown title='Admin' id='admin-menu'>
                            <LinkContainer to='/admin/userlist'>
                               <NavDropdown.Item>Users</NavDropdown.Item>

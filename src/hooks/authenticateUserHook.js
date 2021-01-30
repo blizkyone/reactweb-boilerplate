@@ -31,6 +31,7 @@ const AuthenticateUserHook = () => {
    }
 
    const getUserInfo = async () => {
+      console.log(`current user uid: ${auth.currentUser.uid}`)
       try {
          await authUser({
             variables: { uid: auth.currentUser.uid },

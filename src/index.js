@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Provider } from 'react-redux'
 import store from './store'
+import { SessionProvider } from './context/SessionContext'
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
 
 const client = new ApolloClient({
@@ -16,9 +17,11 @@ const client = new ApolloClient({
 ReactDOM.render(
    <React.StrictMode>
       <ApolloProvider client={client}>
-         <Provider store={store}>
-            <App />
-         </Provider>
+         <SessionProvider>
+            <Provider store={store}>
+               <App />
+            </Provider>
+         </SessionProvider>
       </ApolloProvider>
    </React.StrictMode>,
    document.getElementById('root')
