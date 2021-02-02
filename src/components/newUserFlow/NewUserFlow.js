@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Card } from 'react-bootstrap'
 import Credentials from './Credentials'
 import UserInfo from './UserInfo'
 import { auth, firebase } from '../../firebase'
 import { useMutation } from '@apollo/client'
 import { createUser } from '../../gql/mutations'
+import { SessionContext } from '../../context/SessionContext'
 
 import moment from 'moment'
 
 const NewUserFlow = () => {
+   const { setUserProfile } = useContext(SessionContext)
    const [createNewUser] = useMutation(createUser)
    const [stage, setStage] = useState(0)
    const [username, setUsername] = useState('')
@@ -32,30 +34,68 @@ const NewUserFlow = () => {
    }, [])
 
    const handleCreateUser = async () => {
-      console.log(moment(parseInt(birthDate)).format('MMMM Do, YYYY'))
-      let uid = await auth.currentUser.uid
-      console.log({ uid, username, email, password, name, gender, birthDate })
-      const { data } = await createNewUser({
-         variables: {
-            data: { uid, username, email, password, name, gender, birthDate },
-         },
-      })
-      console.log(data)
+      let currentUser = await auth.currentUser
+      if (currentUser) {
+         let uid = await auth.currentUser.uid
+         const { data } = await createNewUser({
+            variables: {
+               data: {
+                  uid,
+                  username,
+                  email,
+                  password,
+                  name,
+                  gender,
+                  birthDate,
+               },
+            },
+         })
 
-      // add firebase email/password sign in
-      const credential = firebase.auth.EmailAuthProvider.credential(
-         email,
-         password
-      )
-      auth.currentUser
-         .linkWithCredential(credential)
-         .then(function (usercred) {
-            var user = usercred.user
-            console.log('Account linking success', user)
-         })
-         .catch(function (error) {
-            console.log('Account linking error', error)
-         })
+         // add firebase email/password sign in
+         const credential = firebase.auth.EmailAuthProvider.credential(
+            email,
+            password
+         )
+         auth.currentUser
+            .linkWithCredential(credential)
+            .then(function (usercred) {
+               var user = usercred.user
+               console.log('Account linking success', user)
+            })
+            .catch(function (error) {
+               console.log('Account linking error', error)
+            })
+
+         const { user, token } = data.createUser
+         setUserProfile({ token, user })
+      } else {
+         try {
+            let userCredential = await auth.createUserWithEmailAndPassword(
+               email,
+               password
+            )
+            currentUser = userCredential.user
+            const { data } = await createNewUser({
+               variables: {
+                  data: {
+                     uid: currentUser.uid,
+                     username,
+                     email,
+                     password,
+                     name,
+                     gender,
+                     birthDate,
+                  },
+               },
+            })
+            const { user, token } = data.createUser
+            setUserProfile({ token, user })
+         } catch (error) {
+            var errorCode = error.code
+            var errorMessage = error.message
+            console.log(errorMessage)
+         }
+      }
    }
 
    const credentialsProps = {

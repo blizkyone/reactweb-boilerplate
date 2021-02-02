@@ -24,8 +24,11 @@ export const createUser = gql`
       createUser(data: $data) {
          token
          user {
-            name
             id
+            uid
+            name
+            username
+            email
          }
          message
       }

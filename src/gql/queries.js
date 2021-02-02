@@ -2,9 +2,11 @@ import { gql } from '@apollo/client'
 
 export const getUserQuery = gql`
    {
-      users {
+      getMyProfile {
          name
          id
+         email
+         username
       }
    }
 `

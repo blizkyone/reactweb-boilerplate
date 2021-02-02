@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useLazyQuery } from '@apollo/client'
+import { getUserQuery } from '../gql/queries'
 // import React, { useState, useEffect, useRef } from 'react'
 // import Dexie from 'dexie'
 
 const SessionContext = React.createContext()
 
 const SessionProvider = (props) => {
+   const [getMyProfile, { data }] = useLazyQuery(getUserQuery)
    const [userProfile, setUserProfile] = useState()
    // const [ online, setOnline ] = useState(true)
    // const [ localdb, setLocaldb ] = useState()
@@ -25,6 +28,23 @@ const SessionProvider = (props) => {
    //     }
 
    // }, [userProfile])
+
+   useEffect(() => {
+      let token = localStorage.getItem('token')
+      if (token) {
+         console.log('called')
+         const init = async () => {
+            getMyProfile()
+         }
+         init()
+      }
+   }, [getMyProfile])
+
+   useEffect(() => {
+      if (data) {
+         setUserProfile(data.getMyProfile)
+      }
+   }, [data])
 
    const valueObject = {
       userProfile,

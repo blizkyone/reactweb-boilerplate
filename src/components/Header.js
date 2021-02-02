@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
-import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
+import { Navbar, Nav, Container, NavDropdown, Button } from 'react-bootstrap'
 import { SessionContext } from '../context/SessionContext'
+import { auth } from '../firebase'
 
 const Header = () => {
    const { userProfile } = useContext(SessionContext)
@@ -19,6 +20,12 @@ const Header = () => {
                      <LinkContainer to='/map'>
                         <Nav.Link>Map</Nav.Link>
                      </LinkContainer>
+                     <Button onClick={(_) => console.log(userProfile)}>
+                        userProfile
+                     </Button>
+                     <Button onClick={(_) => console.log(auth.currentUser)}>
+                        firebaseProfile
+                     </Button>
                      {userProfile ? (
                         <NavDropdown title='Username' id='username'>
                            <LinkContainer to='/profile'>

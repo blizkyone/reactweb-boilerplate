@@ -61,6 +61,15 @@ const Credentials = ({
       ) {
          setStage(1)
       } else {
+         if (
+            password !== confirmPassword ||
+            /\d+/.test(password) ||
+            /[a-zA-Z]/.test(password)
+         ) {
+            setPasswordError('Password does not match or invalid')
+         } else {
+            setPasswordError(null)
+         }
          if (!validator.isEmail(email)) {
             setEmailError('Invalid email')
          } else {
@@ -70,15 +79,6 @@ const Credentials = ({
             setUsrError('Validate your username')
          } else {
             setUsrError(null)
-         }
-         if (
-            password !== confirmPassword ||
-            /\d+/.test(password) ||
-            /[a-zA-Z]/.test(password)
-         ) {
-            setPasswordError('Password does not match or invalid')
-         } else {
-            setPasswordError(null)
          }
       }
    }

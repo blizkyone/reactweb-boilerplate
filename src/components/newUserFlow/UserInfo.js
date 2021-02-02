@@ -113,7 +113,7 @@ const UserInfo = ({
    }
 
    return (
-      <Form>
+      <Form onSubmit={createUser}>
          <Form.Group>
             {/* <Form.Label>Email address</Form.Label> */}
             <Form.Control
@@ -178,12 +178,7 @@ const UserInfo = ({
             </Form.Group>
          </Form.Row>
          <Form.Text style={{ color: 'red' }}>{birthDateError}</Form.Text>
-         <Button
-            className='mx-3'
-            variant='danger'
-            type='submit'
-            onClick={(_) => setStage(0)}
-         >
+         <Button className='mx-3' variant='danger' onClick={(_) => setStage(0)}>
             Back
          </Button>
          <Button
